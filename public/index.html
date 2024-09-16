@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="mainPage">
+        <h1>Welcome to the Online Outpatient</h1>
+        <div id="buttonContainer">
+        <button id="bookAppointmentBtn">Book Appointment</button>
+        <button id="viewAppointmentBtn">View Appointment</button>
+        <button id="cancelAppointmentBtn">Cancel Appointment</button>
+        </div>
+    </div>
+
+    <div id="formContainer" style="display: none;">
+        <form id="outpatientForm">
+            <h2>Online Outpatient Form</h2>
+            <p>Please fill all the mandatory <span class="required">*</span> fields</p>
+            <label for="Name">Name:<span class="required">*</span></label>
+            <input type="text" id="Name" name="name" required pattern="[A-Za-z\s]+"
+             title="Name should only contain alphabetic characters and spaces."><br>
+
+            <label for="gender">Gender:<span class="required">*</span></label><br>
+            <input type="radio" id="male" name="gender" value="Male" required>
+            <label for="male">Male</label><br>
+            <input type="radio" id="female" name="gender" value="Female" required>
+            <label for="female">Female</label><br>
+            <input type="radio" id="others" name="gender" value="Others" required>
+            <label for="others">Others</label><br><br>
+
+            <label for="Mobile">Mobile Number:<span class="required">*</span></label><br>
+            <input type="tel" id="Mobile" name="mobileNumber" required pattern="\d{10}" 
+            title="Mobile number should be exactly 10 digits."><br>
+
+            <label for="email">Email:<span class="required">*</span></label><br>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="DFA">Date For Appointment:<span class="required">*</span></label><br>
+            <input type="date" id="DFA" name="date" required><br>
+
+            <label for="age">Age:<span class="required">*</span></label>
+            <input type="number" id="age" name="age" min="1" max="120" required><br>
+
+            <label for="Disease">Disease:<span class="required">*</span></label><br>
+            <select id="Disease" name="disease" required>
+                <option value="" disabled selected>Select a disease</option>
+                <option value="Flu">Flu</option>
+                <option value="Cold">Cold</option>
+                <option value="Headache">Headache</option>
+                <option value="Stomach Ache">Stomach Ache</option>
+                <option value="Back Pain">Back Pain</option>
+                <option value="Allergy">Allergy</option>
+</select><br>
+
+
+            <label for="timeSlot">Select Time Slot:<span class="required">*</span></label><br>
+            <select id="timeSlot" name="timeSlot" required>
+                <option value="" disabled selected>Select a Timeslot</option>
+                <option value="9-10AM">9-10AM</option>
+                <option value="10-11AM">10-11AM</option>
+                <option value="11AM-12PM">11AM-12PM</option>
+                <option value="3-4PM">3-4PM</option>
+                <option value="4-5PM">4-5PM</option>
+                <option value="5-6PM">5-6PM</option>
+            </select><br>
+
+            <p>Is this your first time here?<span class="required">*</span></p>
+            <input type="radio" id="firstTimeYes" name="firstTime" value="Yes" required>
+            <label for="firstTimeYes">Yes</label><br>
+            <input type="radio" id="firstTimeNo" name="firstTime" value="No" required>
+            <label for="firstTimeNo">No</label><br>
+
+            <input type="submit" value="Submit">
+            <button type="button" id="goHomeBtn">Go to Home Page</button>
+        </form>
+
+        <div id="responseMessage" class="messageBox" style="display: none;">
+            <h3>Appointment Created</h3>
+            <p>Your appointment ID is: <span id="patientId"></span></p>
+            <p>Your token number is: <span id="tokenNumber"></span></p>
+        </div>
+        
+        <div id="cancelContainer" style="display: none;">
+            <h2>Cancel Appointment</h2>
+            <form id="cancelForm">
+                <label for="cancelId">Enter Appointment ID to Cancel:</label>
+                <input type="text" id="cancelId" name="cancelId" required>
+                <input type="submit" value="Cancel Appointment">
+            </form>
+            <button type="button" id="goHomeAfterCancelBtn">Go to Home Page</button>
+        </div>
+
+        <div id="viewContainer" style="display: none;">
+            <h2>View Appointment</h2>
+            <form id="viewForm">
+                <label for="viewId">Enter Appointment ID to View:</label>
+                <input type="text" id="viewId" name="viewId" required>
+                <input type="submit" value="View Appointment">
+            </form>
+            <div id="appointmentDetails" style="display: none;">
+                <h4>Appointment Details</h4>
+                <p><strong>Name:</strong> <span id="viewName"></span></p>
+                <p><strong>Gender:</strong> <span id="viewGender"></span></p>
+                <p><strong>Mobile Number:</strong> <span id="viewMobile"></span></p>
+                <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+                <p><strong>Date For Appointment:</strong> <span id="viewDate"></span></p>
+                <p><strong>Age:</strong> <span id="viewAge"></span></p>
+                <p><strong>Disease:</strong> <span id="viewDisease"></span></p>
+                <p><strong>Time Slot:</strong> <span id="viewTimeSlot"></span></p>
+                <p><strong>Token Number:</strong> <span id="viewTokenNumber"></span></p>
+                <p><strong>First Time Here:</strong> <span id="viewFirstTime"></span></p>
+            </div>
+            <button type="button" id="goHomeAfterViewBtn">Go to Home Page</button>
+        </div>
+    </div>
+</body>
+</html>
