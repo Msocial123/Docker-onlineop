@@ -1,35 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-app-deployment
+  name: onlineop
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: node-app
+      app: myapp
   template:
     metadata:
       labels:
-        app: node-app
+        app: myapp
     spec:
       containers:
-      - name: node-app
-        image: sathwikagabbeta/dockercapsuleproject-app:latest
+      - name: my-app-container
+        image: sathwikagabbeta/docker-capsule-project-app:latest
         ports:
-        - containerPort: 3000
+          - containerPort: 3999
         env:
-        - name: MONGO_URI
-          value: mongodb://mongo-service:27017/outpatients
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-            cpu: "1"
-        volumeMounts:
-        - name: app-storage
-          mountPath: /usr/src/app
-      volumes:
-      - name: app-storage
-        emptyDir: {}
+         - name: MONGODB_URI
+           value: "mongodb://mongodb:27017/Survey"
+      - name: docker
+        image: mongo:latest
+        ports:
+           - containerPort: 27017
