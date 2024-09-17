@@ -1,79 +1,57 @@
 ---
-- name: Deploy Node.js Application
-  hosts: all
+- hosts: all
   become: yes
   vars:
-    app_name: node-app
-    app_port: 3000
+    app_name: "nodejs-app"
+    docker_image: "sathwikagabbeta/dockercapsuleproject-app:latest"
+    mongo_image: "mongo:latest"
+    mongo_uri: "mongodb://mongo:27017/outpatients"
+    node_port: 3000
     mongo_port: 27017
-    repo_url: 'https://your-repo-url.git'  # URL to your Git repository
-    repo_dest: '/opt/node-app'  # Path where the repo will be cloned
-    node_version: '20.x'
- 
+
   tasks:
-    - name: Install necessary packages
+    - name: Install dependencies
       apt:
         name:
-          - curl
-          - git
-          - build-essential
+          - docker.io
+          - docker-compose
+          - kubelet
+          - kubectl
+          - kubeadm
         state: present
         update_cache: yes
- 
-    - name: Install Node.js
-      become: yes
-      apt:
-        name: "nodejs"
-        state: present
- 
-    - name: Install npm
-      become: yes
-      apt:
-        name: "npm"
-        state: present
- 
-    - name: Ensure MongoDB is installed
-      apt:
-        name: mongodb
-        state: present
-        update_cache: yes
- 
-    - name: Start and enable MongoDB
+
+    - name: Ensure Docker service is running
       service:
-        name: mongodb
+        name: docker
         state: started
-        enabled: yes
- 
-    - name: Clone the application repository
-      git:
-        repo: "{{ repo_url }}"
-        dest: "{{ repo_dest }}"
-        version: main
-        force: yes
- 
-    - name: Install application dependencies
-      npm:
-        path: "{{ repo_dest }}"
-        state: present
- 
-    - name: Start the Node.js application
-      systemd:
-        name: node-app
-        state: started
-        enabled: yes
-        exec_start: "node {{ repo_dest }}/server.js"
-        working_directory: "{{ repo_dest }}"
-        user: "node"
- 
-    - name: Configure and restart Node.js service
+        enabled: true
+
+    - name: Create application directory
+      file:
+        path: /usr/src/app
+        state: directory
+        
+    - name: Copy docker-compose.yml to remote machine
       template:
-        src: node-app.service.j2
-        dest: /etc/systemd/system/node-app.service
-      notify:
-        - restart node-app
- 
-  handlers:
-    - name: restart node-app
-      systemd:
-        name: node-app
-        state: restarted
+        src: templates/docker-compose.j2
+        dest: /usr/src/app/docker-compose.yml
+
+    - name: Build and push Docker image
+      shell: |
+        docker-compose build
+        docker-compose push
+
+    - name: Apply Kubernetes deployment
+      template:
+        src: templates/deployment.j2
+        dest: /usr/src/app/deployment.yaml
+    - name: Apply Kubernetes deployment
+      command: kubectl apply -f /usr/src/app/deployment.yaml
+
+    - name: Apply Kubernetes service
+      template:
+        src: templates/service.j2
+        dest: /usr/src/app/service.yaml
+    - name: Apply Kubernetes service
+      command: kubectl apply -f /usr/src/app/service.yaml
