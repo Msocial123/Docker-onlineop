@@ -31,7 +31,12 @@
       file:
         path: /usr/src/app
         state: directory
-        
+
+    - name: Copy Dockerfile to remote machine
+      template:
+        src: templates/Dockerfile.j2
+        dest: /usr/src/app/Dockerfile
+
     - name: Copy docker-compose.yml to remote machine
       template:
         src: templates/docker-compose.j2
